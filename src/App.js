@@ -52,7 +52,7 @@ class App extends Component {
     };
 
     //console.log("Prev state :", this.props.reduxStore.getState());
-    debugger;
+    //debugger;
     this.props.dispatch(action);
 
     //console.log("New state :", this.props.reduxStore.getState());

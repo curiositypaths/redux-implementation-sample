@@ -66,7 +66,7 @@ store.subscribe = function() {
 const renderReactApp = () =>
   ReactDOM.render(
     <Provider store={store}>
-      <App renderReactApp={renderReactApp} />
+      <App />
     </Provider>,
     document.getElementById("root")
   );
