@@ -1,70 +1,47 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { createStore } from "redux";
+import { connect } from "react-redux";
 
-// Reducer
-// "Hi"
-// {
-//   type: "UPDATE_INPUT",
-//   payload: "New input vaue"
-// };
+//redux
 
-const reducer = (state = "Default state", action) => {
-  switch (action.type) {
-    case "UPDATE_INPUT":
-      return action.payload;
-    default:
-      return state;
-  }
+const mapStateToProps = reduxState => {
+  console.log("reduxState is ", reduxState);
+  //debugger;
+  console.log("In mapStateToProps", ++counter);
+  return {
+    inputFromRedux: reduxState,
+    tomato: "Potato"
+  };
 };
 
-// const addToCollection = (state = [], action) => {
-//   switch (action.type) {
-//     case "ADD_TO_COLLECTION":
-//       return [...state, action.payload];
-//     default:
-//       return state;
-//   }
-// };
-
-const action = {
-  type: "UPDATE_INPUT",
-  payload: "Updated state"
+const OtherComponent = props => {
+  return <h1>Other component</h1>;
 };
 
-const stateForStore = reducer("Some other default state", action);
+const ConnectInputToComponent = connect(mapStateToProps);
 
-console.log("The redux state will be ", stateForStore);
-
-console.log("Create store is :", createStore);
-
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
-
-console.log("Store is :", store);
-console.log("The current state of the store is :", store.getState());
-
-store.dispatch(action);
-console.log("The new store state is :", store.getState());
-
-//////////////////////////////////////////////
+const ConnectedOtherComponent = ConnectInputToComponent(OtherComponent);
 
 class App extends Component {
   constructor(props) {
     super(props);
-    store.subscribe(this.props.renderReactApp);
-    store.subscribe(function() {
-      console.log("Ciao from the store");
-    });
+    // this.props.reduxStore.subscribe(this.props.renderReactApp);
+    // this.props.reduxStore.subscribe(function() {
+    //   console.log("Ciao from the store");
+    // });
   }
   // state = {
   //   input: "Ciao!"
   // };
 
   // handleReactStateChange = e => this.setState({ input: e.target.value });
+
+  componentDidMount() {
+    // setTimeout(() => {
+    //   this.props.dispatch({ type: "UPDATE_INPUT", payload: "New string" });
+    // }, 2000);
+  }
 
   handleReduxStateChange = e => {
     console.log("Inside event handler");
@@ -74,26 +51,34 @@ class App extends Component {
       payload: e.target.value
     };
 
-    console.log("Prev state :", store.getState());
+    //console.log("Prev state :", this.props.reduxStore.getState());
+    debugger;
+    this.props.dispatch(action);
 
-    store.dispatch(action);
-
-    console.log("New state :", store.getState());
+    //console.log("New state :", this.props.reduxStore.getState());
   };
 
   render() {
-    console.log("In render");
-    console.log("Redux state is :", store.getState());
+    //debugger;
+    // console.log("In render");
+    // console.log("Redux state is :", this.props.reduxStore.getState());
     return (
       <div className="App">
         <input
           type="text"
           onChange={this.handleReduxStateChange}
-          value={store.getState()}
+          value={this.props.inputFromRedux}
         />
+        <ConnectedOtherComponent />
       </div>
     );
   }
 }
 
-export default App;
+let counter = 0;
+
+console.log("Connect", connect);
+
+console.log("ConnectInputToComponent", ConnectInputToComponent);
+
+export default ConnectInputToComponent(App);
